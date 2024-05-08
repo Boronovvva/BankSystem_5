@@ -1,4 +1,6 @@
+from typing import Iterable
 from django.db import models
+from django.utils.crypto import get_random_string
 
 from django.contrib.auth.models import AbstractUser
 
@@ -20,18 +22,31 @@ class User(AbstractUser):
     )
     wallet_address = models.DateTimeField(
         max_length = 255,
-        verbose_name = 'ID кошелька' 
+        unique=True,blank=True,null=True,
+        verbose_name = 'ID кошелька' ,
     )
     created_at = models.DateTimeField(
         auto_now_add = True,
         verbose_name = 'Дата регистрации' 
     )
     
+        
+    def save(self, *args, **kwargs):
+        if not self.wallet_address:
+            unique_address_genereted = False
+            while not unique_address_genereted:
+                wallet_address = get_random_string(length=12)
+                if not User.objects.filter(wallet_address=wallet_address).exists():
+                    unique_address_genereted = True
+            self.wallet_address = wallet_address
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.username
     
     class Meta:
         verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name_plural = "Пользователи"                
+    
 
 
