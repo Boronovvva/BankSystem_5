@@ -10,3 +10,9 @@ class HistoryTransferSerializer(serializers.ModelSerializer):
             'created_at' : {'read_only': True},
             
         }
+
+    def validate(self, attrs):
+        if attrs['amount'] > attrs['from_user'].balance:
+            raise serializers.ValidationError("Недостаточно средств!")
+        
+        return attrs

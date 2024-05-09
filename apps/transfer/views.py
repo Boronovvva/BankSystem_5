@@ -9,8 +9,10 @@ from rest_framework import serializers
 
 from apps.transfer.models import HistoryTransfer
 from apps.transfer.serializers import HistoryTransferSerializer
-from apps.users.models import User  
-# Create your views here.
+from apps.transfer.permissions import HistoryPermissions
+from rest_framework.permissions import IsAuthenticated
+
+
 class HistoryTransferAPIViewSet(GenericViewSet,
                      mixins.ListModelMixin,
                      mixins.CreateModelMixin,
@@ -20,7 +22,4 @@ class HistoryTransferAPIViewSet(GenericViewSet,
     queryset = HistoryTransfer.objects.all()
     serializer_class = HistoryTransferSerializer
 
-    # def get_permissions(self):
-    #     if self.action in ('update', 'partial_update', 'destroy'):
-    #         return (UserPermissons(), )
-    #     return (AllowAny(), )
+    permission_classes = (IsAuthenticated, )
