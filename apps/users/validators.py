@@ -8,5 +8,3 @@ def validate_phone_number(value):
         raise ValidationError(
             'Номер телефона должен быть в действующим международном формате'
         )
-
-
